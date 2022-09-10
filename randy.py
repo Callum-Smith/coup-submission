@@ -4,7 +4,6 @@ from submission_helper.state import *
 from submission_helper.enums import *
 from typing import Optional
 
-
 game_info: Optional[GameInfo] = None
 bot_battle = BotBattle()
 
@@ -53,15 +52,15 @@ def primary_action_handler(game_info: GameInfo):
         ForeignAid = 0
         Coup = 10 * bool(game_info.balances[game_info.player_id] < 7)
 
-        Exchange = 0 * (3 - discarded("Ambassador", game_info))
-        Tax = 10 * (3 - discarded("Duke", game_info))
-        Steal = 0 * (3 - discarded("Captain", game_info))
-        Assassinate = 0 * (3 - discarded("Assassin", game_info)) * bool(game_info.balances[game_info.player_id] < 3)
+        Exchange = 0 * (3 - get_discarded("Ambassador", game_info))
+        Tax = 10 * (3 - get_discarded("Duke", game_info))
+        Steal = 0 * (3 - get_discarded("Captain", game_info))
+        Assassinate = 0 * (3 - get_discarded("Assassin", game_info)) * bool(game_info.balances[game_info.player_id] < 3)
         weights = [Income, ForeignAid, Coup,  Tax, Assassinate, Exchange, Steal]
 
         play(choose(weights), game_info)
 
-def discarded(card: str, game_info: GameInfo):
+def get_discarded(card: str, game_info: GameInfo):
     return game_info.revealed_cards[card]
 
 def choose(weights: list, population: list = [1,2,3,4,5,6,7]):
@@ -96,11 +95,6 @@ def challenge_response_handler():
 
 def discard_choice_handler():
     bot_battle.play_discard_choice(0)
-
-
-def is_valid_primary():
-    return True
-
 
 
 if __name__ == "__main__":
