@@ -10,10 +10,12 @@ from random import choices
 
 
 
-def ggg():
-    return 6
+# def ggg():
+#     return 6
 
 
-def num(a:int = ggg()):
-    print(a)
-num()
+# def num(a:int = ggg()):
+#     print(a)
+# num()
+
+print(5 *  bool(5 < 7))

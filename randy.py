@@ -49,23 +49,29 @@ def primary_action_handler(game_info: GameInfo):
     if game_info.balances[game_info.player_id] >= 10:
         play(PrimaryAction.Coup, game_info)
     else:
-        income = 0
-        exchange = 0
+        Income = 1
         ForeignAid = 0
-        Tax = 0
-        Steal = 0
-        Assassinate = 0
-        Coup = 0
-        
-        choose([1,2,3,4,5,6,7])
+        Coup = 10 * bool(game_info.balances[game_info.player_id] < 7)
+
+        Exchange = 0 * (3 - discarded("Ambassador", game_info))
+        Tax = 10 * (3 - discarded("Duke", game_info))
+        Steal = 0 * (3 - discarded("Captain", game_info))
+        Assassinate = 0 * (3 - discarded("Assassin", game_info)) * bool(game_info.balances[game_info.player_id] < 3)
+        weights = [Income, ForeignAid, Coup,  Tax, Assassinate, Exchange, Steal]
+
+        play(choose(weights), game_info)
+
+def discarded(card: str, game_info: GameInfo):
+    return game_info.revealed_cards[card]
 
 def choose(weights: list, population: list = [1,2,3,4,5,6,7]):
-    return choices(population, weights, k = 1)
+    go = choices(population, weights, k = 1)
+    return go[0]
 
 def play(move: int, game_info: GameInfo, target_player_id: int = get_next_alive_player()):
     if move == PrimaryAction.Income or PrimaryAction.Exchange or PrimaryAction.ForeignAid or PrimaryAction.Tax:
         bot_battle.play_primary_action(move)
-    elif move == PrimaryAction.Steal:
+    elif move == PrimaryAction.Steal and game_info.balances[get_next_alive_player()] > 0:
         bot_battle.play_primary_action(move, target_player_id)
     elif move == PrimaryAction.Assassinate and game_info.balances[game_info.player_id] >= 3:
         bot_battle.play_primary_action(move, target_player_id)
