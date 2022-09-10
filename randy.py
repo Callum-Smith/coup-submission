@@ -27,7 +27,7 @@ def get_highest_health():
 
 def move_controller(game_info: GameInfo):
     if game_info.requested_move == RequestedMove.PrimaryAction:
-        primary_action_handler(game_info: GameInfo)
+        primary_action_handler(game_info)  
 
     elif game_info.requested_move == RequestedMove.CounterAction:
         counter_action_handler()
@@ -67,7 +67,10 @@ def choose(weights: list, population: list = [1,2,3,4,5,6,7]):
     go = choices(population, weights, k = 1)
     return go[0]
 
-def play(move: int, game_info: GameInfo, target_player_id: int = get_next_alive_player()):
+def play(move: int, game_info: GameInfo, target_player_id: int = 12):
+    if target_player_id == 12:
+        target_player_id = get_next_alive_player()
+
     if move == PrimaryAction.Income or PrimaryAction.Exchange or PrimaryAction.ForeignAid or PrimaryAction.Tax:
         bot_battle.play_primary_action(move)
     elif move == PrimaryAction.Steal and game_info.balances[get_next_alive_player()] > 0:
