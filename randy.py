@@ -25,9 +25,9 @@ def get_highest_health():
             return int(game_info.player_id) + i
     print("Error on get_highest_health", flush = True)
 
-def move_controller(game_info: GameInfo):
+def move_controller(requested_move: RequestedMove):
     if game_info.requested_move == RequestedMove.PrimaryAction:
-        primary_action_handler(game_info)  
+        primary_action_handler()  
 
     elif game_info.requested_move == RequestedMove.CounterAction:
         counter_action_handler()
@@ -44,7 +44,7 @@ def move_controller(game_info: GameInfo):
     else:
         return Exception(f'Unknown requested move: {requested_move}')
 
-def primary_action_handler(game_info: GameInfo):
+def primary_action_handler():
     if game_info.balances[game_info.player_id] >= 10:
         play(PrimaryAction.Coup, game_info)
     else:
